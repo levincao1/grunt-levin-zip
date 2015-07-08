@@ -66,13 +66,19 @@ module.exports = function(grunt) {
 
     });
 
+    var count = 0;
+
     var done = this.async();
+
     this.files.forEach(function(file) {
-      var isExpandedPair = file.orig.expand || false;
+      //var isExpandedPair = file.orig.expand || false;
+      //grunt.log.writeln('levin count value is -> ' + count ++);
       // Where to write the file
       var archive = archiver.create(options.mode);
+
       var alias_name = options.isMd5Name?md5(file.alias_name):file.alias_name;
       var dest = file.dest + alias_name +'.zip';
+      var compressInnerDir = file.comp_inner_dir;
       var sourcePaths = {};
       var destStream = fs.createWriteStream(dest);
       if(!grunt.file.exists(path.dirname(dest))){
@@ -99,15 +105,23 @@ module.exports = function(grunt) {
         done();
       });
       archive.pipe(destStream);
-      file.src.forEach(function(srcFile) {
+      var src = file.src.filter(function(filePath) {
+        if (/\.+(zip|tar|gz)$/.test(filePath)) {
+          grunt.log.warn('filter "' + filePath + '" ');
+          return false;
+        } else {
+          return true;
+        }
+      });
+      src.forEach(function(srcFile) {
         var fstat = fileStatSync(srcFile);
         if (!fstat) {
           grunt.fail.warn('unable to stat srcFile (' + srcFile + ')');
           return;
         }
 
-        var internalFileName = (isExpandedPair) ? file.dest : unixifyPath(path.join(file.dest || '', srcFile));
-
+        //var internalFileName = (isExpandedPair) ? file.dest : unixifyPath(path.join(file.dest || '', srcFile));
+        var internalFileName = srcFile.replace(compressInnerDir,'');//: unixifyPath(path.join(file.dest || '', srcFile));
         // check if internal file name is not a dot, should not be present in an archive
         if (internalFileName === '.') {
           return;

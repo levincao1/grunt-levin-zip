@@ -25,19 +25,32 @@ module.exports = function(grunt) {
 
     // Before generating any new files, remove any previously-created files.
     clean: {
-      tests: ['tmp']
+      before:{
+        src:['tmp']
+      },
+      after:{
+        src:['tmp/module1/**/*','tmp/module2/**/*','!tmp/**/*.zip']
+      }
+
+    },
+    copy:{
+      main:{
+        files:[
+          {expand:true,cwd:'test/',src:['module1/**/*','module2/**/*'],dest:'tmp/'}
+        ]
+      }
     },
 
     // Configuration to be run (and then tested).
     levin_zip: {
       options:{
         mode:'zip',
-        isMd5Name:true
+        isMd5Name:false
       },
       asserts:{
         files:[
-          {src:['test/module1/**/*'],dest:'test/module1/',alias_name:'https://game.xiaomi.com/gift'},
-          {src:['test/module2/**/*'],dest:'test/module2/',alias_name:'https://game.xiaomi.com/share'}
+          {src:['tmp/module1/**/*'],comp_inner_dir:'tmp/module1/',dest:'tmp/module1/',alias_name:'gift'},
+          {src:['tmp/module2/**/*'],comp_inner_dir:'tmp/module2/',dest:'tmp/module2/',alias_name:'share'}
         ]
       }
 
@@ -58,12 +71,13 @@ module.exports = function(grunt) {
   // These plugins provide necessary tasks.
   grunt.loadNpmTasks('grunt-contrib-jshint');
   grunt.loadNpmTasks('grunt-contrib-clean');
+  grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-nodeunit');
 
   // Whenever the "test" task is run, first clean the "tmp" dir, then run this
   // plugin's task(s), then test the result.
   //grunt.registerTask('test', ['clean', 'levin_zip', 'nodeunit']);
-  grunt.registerTask('test', ['clean', 'levin_zip']);
+  grunt.registerTask('test', ['clean:before','copy','levin_zip','clean:after']);
 
   // By default, lint and run all tests.
   grunt.registerTask('default', ['jshint', 'test']);

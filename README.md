@@ -60,8 +60,8 @@ grunt.initConfig({
   levin_zip: {
     options: {},
     files: [
-      {src:['test/module1/**/*'],dest:'test/module1/',alias_name:'https://game.xiaomi.com/gift'},
-      {src:['test/module2/**/*'],dest:'test/module2/',alias_name:'https://game.xiaomi.com/share'}
+      {src:['test/module1/**/*'],comp_inner_dir:'tmp/module1/',dest:'test/module1/',alias_name:'https://game.xiaomi.com/gift'},
+      {src:['test/module2/**/*'],comp_inner_dir:'tmp/module2/',dest:'test/module2/',alias_name:'https://game.xiaomi.com/share'}
     ],
   },
 });
@@ -83,6 +83,8 @@ grunt.initConfig({
      {
        //need compress static asserts
        src:['test/module1/**/*'],
+       //zip package inner directory
+       comp_inner_dir:'tmp/module1/',
        //the directory is storage the result of zip file
        dest:'test/module1/',
        //zip file alias name
@@ -90,6 +92,8 @@ grunt.initConfig({
      },
      {
        src:['test/module2/**/*'],
+       //zip package inner directory
+       comp_inner_dir:'tmp/module1/',
        dest:'test/module2/',
        alias_name:'https://game.xiaomi.com/share'
      }
