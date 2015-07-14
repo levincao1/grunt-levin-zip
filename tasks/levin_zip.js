@@ -69,8 +69,9 @@ module.exports = function(grunt) {
     var count = 0;
 
     var done = this.async();
+    var modules  = this.files;
 
-    this.files.forEach(function(file) {
+    modules.forEach(function(file,index) {
       //var isExpandedPair = file.orig.expand || false;
       //grunt.log.writeln('levin count value is -> ' + count ++);
       // Where to write the file
@@ -102,7 +103,9 @@ module.exports = function(grunt) {
       destStream.on('close', function() {
         var size = archive.pointer();
         grunt.log.writeln('Created ' + chalk.cyan(dest) + ' (' + getSize(size) + ')');
-        done();
+        if(index == modules.length-1){
+          done();
+        }
       });
       archive.pipe(destStream);
       var src = file.src.filter(function(filePath) {

@@ -1,7 +1,7 @@
 {
   "name": "grunt-levin-zip",
   "description": "Generate pkg zip by user appoint static asserts directory",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "homepage": "https://github.com/levincao1/grunt-levin-zip",
   "author": "levin <lansdmn@gmail.com> (http://www.cnblogs.com/levincao/)",
   "repository": {
