@@ -103,9 +103,10 @@ module.exports = function(grunt) {
       destStream.on('close', function() {
         var size = archive.pointer();
         grunt.log.writeln('Created ' + chalk.cyan(dest) + ' (' + getSize(size) + ')');
-        if(index == modules.length-1){
+        if(count == modules.length-1){
           done();
         }
+        count++;
       });
       archive.pipe(destStream);
       var src = file.src.filter(function(filePath) {
